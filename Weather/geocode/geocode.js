@@ -1,5 +1,7 @@
-var geocodeAddress = (address) =>{
-   const request = require('request');
+const request = require('request');
+
+var geocodeAddress = (address, callback) =>{
+  
 
 //encode/decode address
 var encodedAddress = encodeURIComponent(address);
@@ -19,14 +21,20 @@ request({  //url:'https://maps.googleapis.com/maps/api/geocode/json?address=1600
     
     //error handler
     if(error){
-        console.log('Unable to connect');
+        callback('Unable to connect');
     }else if(body.status === 'ZERO_RESULTS'){
-        console.log('Unable to find the address');
+        callback('Unable to find the address');
     }else if(body.status === 'OK'){
         //parse json
-        console.log(`Address: ${body.results[0].formatted_address}`);
-        console.log(`Lat: ${body.results[0].geometry.location.lat}`);
-        console.log(`Lng: ${body.results[0].geometry.location.lng}`);
+//        console.log(`Address: ${body.results[0].formatted_address}`);
+//        console.log(`Lat: ${body.results[0].geometry.location.lat}`);
+//        console.log(`Lng: ${body.results[0].geometry.location.lng}`);
+        //refactor
+        callback(undefined, {
+            address:body.results[0].formatted_address,
+            lat:body.results[0].geometry.location.lat,
+            lng:body.results[0].geometry.location.lng
+        });
     }    
     
 }); 
